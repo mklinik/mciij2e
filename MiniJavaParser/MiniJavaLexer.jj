@@ -11,10 +11,12 @@ PARSER_END(MiniJavaParser)
 TOKEN : {
       <IDENTIFIER: ["a"-"z"] | ["A"-"Z"] | ["0"-"9"] (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")* >
     | <INTEGER_LITERAL: (["0"-"9"])+ >
+    | <OP: "&&" | "<" | "+" | "-" | "*">
 }
 
 SKIP : {
-      < "--" (["a"-"z"])* ("\n" | "\r" | "\r\n")>
+      < "//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+    | <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
     | " "
     | "\t"
     | "\n"
@@ -39,9 +41,9 @@ void MiniJavaToken():
   "class"  |  <IDENTIFIER> | "{" | "public" | "static" | "void" |
   "main" | "(" | "String"  | "[" | "]" | ")" | "}" | "extends" | ";"
   | "return" | "," | "int" | "boolean" | "=" | "if" | "else" | "while"
-  | "System.out.println" | "&&" | "<" | "+" | "-" | "*" | "." |
+  | "System.out.println"  | "." |
   "length" | <INTEGER_LITERAL> | "true" | "false" | "this" | "new" |
-  "!"
+  "!" | "<OP>"
 }
 
 
