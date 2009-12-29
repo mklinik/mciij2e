@@ -13,8 +13,17 @@ TOKEN : {
     | <INTEGER_LITERAL: (["0"-"9"])+ >
 }
 
+SKIP : {
+      < "--" (["a"-"z"])* ("\n" | "\r" | "\r\n")>
+    | " "
+    | "\t"
+    | "\n"
+}
+
 // The following is a simple grammar that will allow you
 // to test the generated lexer.
+
+
 
 
 void Goal() :
