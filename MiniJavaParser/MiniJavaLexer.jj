@@ -7,21 +7,42 @@ PARSER_BEGIN(MiniJavaParser)
 PARSER_END(MiniJavaParser)
 
 
-// Insert a specification of a lexical analysis here.
-TOKEN : {
-      <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)*>
-    |  <#LETTER: ["A"-"Z","_","a"-"z"]>
-    |  <#DIGIT: ["0"-"9"]>
-    | <INTEGER_LITERAL: (["0"-"9"])+ >
-    | <OP: "&&" | "<" | "+" | "-" | "*">
-}
-
 SKIP : {
       < "//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
     | < "/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
     | " "
     | "\t"
     | "\n"
+}
+
+TOKEN : {
+      <CLASS: "class">
+    | <PUBLIC: "public">
+    | <STATIC: "static">
+    | <VOID: "void">
+    | <MAIN: "main">
+    | <STRING: "String">
+    | <EXTENDS: "extends">
+    | <RETURN: "return">
+    | <INT: "int">
+    | <BOOLEAN: "boolean">
+    | <IF: "if">
+    | <ELSE: "else">
+    | <WHILE: "while">
+    | <PRINT: "System.out.println">
+    | <LENGTH: "length">
+    | <TRUE: "true">
+    | <FALSE: "false">
+    | <THIS: "this">
+    | <NEW: "new">
+}
+
+TOKEN : {
+      <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)*>
+    |  <#LETTER: ["A"-"Z","_","a"-"z"]>
+    |  <#DIGIT: ["0"-"9"]>
+    | <INTEGER_LITERAL: (["0"-"9"])+ >
+    | <OP: "&&" | "<" | "+" | "-" | "*">
 }
 
 // The following is a simple grammar that will allow you
@@ -70,9 +91,9 @@ void MiniJavaToken():
     | "this"
     | "new"
     | "!"
-    | "<OP>"
-    | "<IDENTIFIER>"  { System.out.println("got identifier " + token.image); }
-    | "<INTEGER_LITERAL>"   { System.out.println("got integer literal " + token.image); }
+    | <OP>  { System.out.println("got operator " + token.image); }
+    | <IDENTIFIER>  { System.out.println("got identifier " + token.image); }
+    | <INTEGER_LITERAL>   { System.out.println("got integer literal " + token.image); }
 }
 
 
