@@ -8,7 +8,10 @@ PARSER_END(MiniJavaParser)
 
 
 // Insert a specification of a lexical analysis here. 
-
+TOKEN : {
+      <IDENTIFIER: ["a"-"z"] | ["A"-"Z"] | ["0"-"9"] (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")* >
+    | <INTEGER_LITERAL: (["0"-"9"])+ >
+}
 
 // The following is a simple grammar that will allow you
 // to test the generated lexer.
