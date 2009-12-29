@@ -45,55 +45,121 @@ TOKEN : {
     | <OP: "&&" | "<" | "+" | "-" | "*">
 }
 
-// The following is a simple grammar that will allow you
-// to test the generated lexer.
 
 
 
 
-void Goal() :
+
+void Program() :
 {}
 {
-  ( MiniJavaToken() )*
-  <EOF>
+    MainClass() (ClassDecl())*
 }
 
-void MiniJavaToken():
+void MainClass() :
 {}
 {
-      "class"    { System.out.println("got keyword 'class'"); }
-    | "{"
-    | "public"
-    | "static"
-    | "void"
-    | "main"
-    | "("
-    | "String"
-    | "["
-    | "]"
-    | ")"
-    | "}"
-    | "extends"
-    | ";"
-    | "return"
-    | ","
-    | "int"
-    | "boolean"
-    | "="
-    | "if"
-    | "else"
-    | "while"
-    | "System.out.println"
-    | "."
-    | "length"
-    | "true"
-    | "false"
-    | "this"
-    | "new"
-    | "!"
-    | <OP>  { System.out.println("got operator " + token.image); }
-    | <IDENTIFIER>  { System.out.println("got identifier " + token.image); }
-    | <INTEGER_LITERAL>   { System.out.println("got integer literal " + token.image); }
+    <CLASS> <IDENTIFIER>
+    "{"
+        <PUBLIC> <STATIC> <VOID> "main" "(" <STRING> "[" "]" <IDENTIFIER> ")"
+        "{"
+            Statement()
+        "}"
+    "}"
+}
+
+void ClassDecl() :
+{}
+{
+    <CLASS> <IDENTIFIER>
+    "{"
+        (VarDecl())*
+        (MethodDecl())*
+    "}"
+}
+
+void VarDecl() :
+{}
+{
+    Type() <IDENTIFIER> ";"
+}
+
+void MethodDecl() :
+{}
+{
+    <PUBLIC> Type() <IDENTIFIER> "(" FormalList() ")"
+    "{"
+        (VarDecl())*
+        (Statement())*
+        <RETURN> Expression() ";"
+    "}"
+}
+
+void FormalList() :
+{}
+{
+    ( Formal() FormalListPrime() )?
+}
+
+void Formal() :
+{}
+{
+    Type() <IDENTIFIER>
+}
+
+void FormalListPrime() :
+{}
+{
+    ( "," Formal() FormalListPrime() )?
+}
+
+void Type() :
+{}
+{
+      <INT> "[" "]"
+    | <BOOLEAN>
+    | <INT>
+    | <IDENTIFIER>
+}
+
+void Statement() :
+{}
+{
+      "{" ( Statement() )* "}"
+    | <IF> "(" Expression() ")" Statement() <ELSE> Statement()
+    | <WHILE> "(" Expression() ")" Statement()
+    | <PRINT> "(" Expression() ")"
+    | <IDENTIFIER> "=" Expression() ";"
+    | <IDENTIFIER> "[" Expression() "]" "=" Expression() ";"
+}
+
+void Expression() :
+{}
+{
+      Expression() <OP> Expression()
+    | Expression() "[" Expression() "]"
+    | Expression() "." <LENGTH>
+    | Expression() "." <IDENTIFIER> "(" ExpressionList() ")"
+    | <INTEGER_LITERAL>
+    | <TRUE>
+    | <FALSE>
+    | <IDENTIFIER>
+    | <THIS>
+    | <NEW> <INT> "[" Expression() "]"
+    | <NEW> <IDENTIFIER> "(" ")"
+    | "!" Expression()
+    | "(" Expression() ")"
 }
 
 
+void ExpressionList() :
+{}
+{
+    ( Expression() ExpressionListPrime() )?
+}
+
+void ExpressionListPrime() :
+{}
+{
+    ( "," Expression() ExpressionListPrime() )?
+}
