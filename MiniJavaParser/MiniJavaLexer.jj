@@ -7,16 +7,18 @@ PARSER_BEGIN(MiniJavaParser)
 PARSER_END(MiniJavaParser)
 
 
-// Insert a specification of a lexical analysis here. 
+// Insert a specification of a lexical analysis here.
 TOKEN : {
-      <IDENTIFIER: ["a"-"z"] | ["A"-"Z"] | ["0"-"9"] (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")* >
+      <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)*>
+    |  <#LETTER: ["A"-"Z","_","a"-"z"]>
+    |  <#DIGIT: ["0"-"9"]>
     | <INTEGER_LITERAL: (["0"-"9"])+ >
     | <OP: "&&" | "<" | "+" | "-" | "*">
 }
 
 SKIP : {
       < "//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
-    | <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+    | < "/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
     | " "
     | "\t"
     | "\n"
@@ -38,12 +40,39 @@ void Goal() :
 void MiniJavaToken():
 {}
 {
-  "class"  |  <IDENTIFIER> | "{" | "public" | "static" | "void" |
-  "main" | "(" | "String"  | "[" | "]" | ")" | "}" | "extends" | ";"
-  | "return" | "," | "int" | "boolean" | "=" | "if" | "else" | "while"
-  | "System.out.println"  | "." |
-  "length" | <INTEGER_LITERAL> | "true" | "false" | "this" | "new" |
-  "!" | "<OP>"
+      "class"    { System.out.println("got keyword 'class'"); }
+    | "{"
+    | "public"
+    | "static"
+    | "void"
+    | "main"
+    | "("
+    | "String"
+    | "["
+    | "]"
+    | ")"
+    | "}"
+    | "extends"
+    | ";"
+    | "return"
+    | ","
+    | "int"
+    | "boolean"
+    | "="
+    | "if"
+    | "else"
+    | "while"
+    | "System.out.println"
+    | "."
+    | "length"
+    | "true"
+    | "false"
+    | "this"
+    | "new"
+    | "!"
+    | "<OP>"
+    | "<IDENTIFIER>"  { System.out.println("got identifier " + token.image); }
+    | "<INTEGER_LITERAL>"   { System.out.println("got integer literal " + token.image); }
 }
 
 
